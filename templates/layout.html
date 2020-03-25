@@ -1,0 +1,172 @@
+<!doctype html>
+{% load static %}
+{% load course_extras %}
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+        <title>{% block title %}{% endblock %}</title>
+        <!-- HARSH STUFF -->
+        <style>
+          h1 {
+            margin: 2em 0;
+          }
+        </style>
+        <!-- END HARSH STUFF -->
+        <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+        <!-- HARSH STUFF -->
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+      	<link rel="stylesheet" href="{% static 'css/logo.css' %}">
+        <!-- END HARSH STUFF -->
+        {% block css %}{% endblock %}
+        <script src="{% static 'js/vendor/modernizr.js' %}"></script>
+        <meta class="foundation-mq">
+    </head>
+
+<style>
+    input[type=button], input[type=submit], input[type=reset] {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      text-decoration: none;
+      margin: 20px 5px;
+      cursor: pointer;
+    }
+</style>
+
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+.w3-quarter img{margin-bottom: -6px; cursor: pointer}
+.w3-quarter img:hover{opacity: 0.6; transition: 0.3s}
+
+.more {
+    position: fixed;
+  top: 0px;
+  right: 1px;
+
+}
+
+#box1 {
+     position: fixed;
+  bottom: 10px;
+  right: 1px;
+}
+
+.noscroll {
+	overflow: hidden;
+}
+
+.hborder {
+	background-color: rgb(28,28,28);
+}
+
+.username {
+	right: 400px;
+}
+
+.more3 {
+	margin-top: -16px;
+	margin-right: -16px;
+	margin-bottom: -16px;
+}
+
+div.polaroid {
+  width: 80%;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 5px;
+}
+
+div.container {
+  text-align: center;
+  padding: 10px 0px;
+}
+</style>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-black w3-animate-left w3-top w3-text-light-grey w3-large" style="z-index:3;width:250px;font-weight:bold;display:none;left:0;" id="mySidebar">
+  <a href="javascript:void()" onclick="w3_close()" class="w3-bar-item w3-button w3-center w3-padding-32">CLOSE</a>
+  <a href="{% url 'home view' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-center w3-padding-16">HOME</a>
+  <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-center w3-padding-16">FORUM</a>
+  <a href="{% url 'suggestion view' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-center w3-padding-16">SUGGESTION FORM</a>
+  {% if user.is_authenticated %}
+  <a href="{% url 'logout_view' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-bottom w3-center noscroll" style="width:inherit">LOGOUT</a>
+  {% else %}
+  <a href="{% url 'login_view' %}" onclick="w3_close()" class="w3-bar-item w3-button w3-bottom w3-center noscroll" style="width:inherit">LOGIN</a>
+  {% endif %}
+</nav>
+
+<!-- Top menu on small screens -->
+<header class=" w3-container w3-top w3-purple w3-xlarge w3-padding-16" style="z-index: 98;">
+	<a href="javascript:void(0)" class="w3-left w3-button w3-white" onclick="w3_open()">☰</a>
+  {% if user.is_authenticated %}
+  <a href="{% url 'profile_view' %}">
+	<span class="w3-left w3-padding">{% if user.is_staff %}Staff: {% endif %}{{ request.user.first_name }} {{ request.user.last_name }}</span>
+  </a>
+  {% else %}
+  <span class="w3-left w3-padding">UCL Massive Open Online Course</span>
+  {% endif %}
+	 <picture>
+  	<source media="(max-width: 599px)" srcset="{% static 'images/empty.png' %}">
+  	<source media="(min-width: 600px)" srcset="{% static 'images/logo.svg' %}">
+	<img src="{% static 'images/logo.png' %}" style="float: right" class="more3">
+	</picture>
+</header>
+<div class="hborder" style="z-index:99; margin-top: 0px; height: 8px"></div>
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<!-- !PAGE CONTENT! -->
+<div class="w3-main w3-content" style="max-width:1600px;margin-top:10px">
+    <body>
+        <nav class="top-bar">
+        </nav>
+        <nav class="top-bar">
+        </nav>
+        <br>
+        {% if messages %}
+            <div class="row">
+                <div class="small-6 small-centered columns">
+                    {% for message in messages %}
+                        <div class="callout {{ message.tags }}" data-closable>
+                            {{ message }}
+                            <button type="button" class="close-button" aria-label="Dismiss message">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+        {% block javascript %}{% endblock %}
+        <script>
+        // Script to open and close sidebar
+        function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+          document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+          document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // Modal Image Gallery
+        function onClick(element) {
+          document.getElementById("img01").src = element.src;
+          document.getElementById("modal01").style.display = "block";
+          var captionText = document.getElementById("caption");
+          captionText.innerHTML = element.alt;
+        }
+
+        </script>
+        <script>$(document).foundation();</script>
+    </body>
+</html>

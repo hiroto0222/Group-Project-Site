@@ -1,0 +1,197 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}UCL Physics MOOC{% endblock %}
+
+{% block css %}
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+.w3-quarter img{margin-bottom: -6px; cursor: pointer}
+.w3-quarter img:hover{opacity: 0.6; transition: 0.3s}
+
+.more {
+    position: fixed;
+  top: 0px;
+  right: 1px;
+
+}
+
+#box1 {
+     position: fixed;
+  bottom: 10px;
+  right: 1px;
+}
+
+.noscroll {
+	overflow: hidden;
+}
+
+.hborder {
+	background-color: rgb(28,28,28);
+}
+
+.username {
+	right: 400px;
+}
+
+.more3 {
+	margin-top: -16px;
+	margin-right: -16px;
+	margin-bottom: -16px;
+}
+
+div.polaroid {
+  width: 80%;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 5px;
+}
+
+div.container {
+  text-align: center;
+  padding: 10px 0px;
+}
+
+.w3-wide {letter-spacing: 10px;}
+.w3-hover-opacity {cursor: pointer;}
+
+img.resize {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width:4000px;
+  height:800px;
+  object-fit:cover;
+  opacity: 0.6;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+/* animations */
+.arrow {
+  text-align: center;
+  margin: 0% 0;
+}
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  <img class="resize" src="{% static 'images/campus-image-gallery-1.jpg' %}" alt="Architecture">
+      <div class="w3-display-middle" style="white-space:nowrap;">
+        <span class="w3-center w3-padding-large w3-black w3-xlarge w3-wide">WELCOME <span class="w3-hide-small">TO </span> THE UCL MOOC</span>
+        <br><br>
+        {% if user.is_authenticated %}
+        <span class="w3-center w3-padding-large w3-purple w3-xlarge w3-wide w3-animate-opacity upper">{% if user.is_staff %}Staff: {% endif %}{{ request.user.first_name }} {{ request.user.last_name }}</span>
+        {% else %}
+        <span class="w3-center w3-padding-large w3-green w3-xlarge w3-wide w3-animate-opacity">
+            <a href="{% url 'login_view' %}">LOGIN HERE</a>
+        </span>
+        {% endif %}
+      </div>
+
+  <!-- Photo grid -->
+  {% if user.is_authenticated %}
+  <div class="arrow bounce">
+      <a class="fa fa-arrow-down fa-2x" href="#linktocourses"></a>
+  </div>
+  <br><br>
+
+  <a name="linktocourses"></a>
+  <div class="w3-row w3-grayscale-min">
+    <div class="w3-quarter">
+		<div class="polaroid">
+      		<a href="{% url 'courses:course detail view' pk='27' %}">
+              <img src="{% static 'images/CM.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+          </a>
+			<div class="container w3-hover-black">
+  			<span>Classical Mechanics</span>
+  			</div>
+		</div>
+		<div class="polaroid">
+      		<img src="{% static 'images/thermal.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Thermal Physics">
+			<div class="container w3-hover-black">
+  			<span>Thermal Physics</span>
+  			</div>
+		</div>
+   </div>
+
+   <div class="w3-quarter">
+	   <div class="polaroid">
+      		<img src="{% static 'images/MM1.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			<div class="container w3-hover-black">
+  			<span class="">Mathematical Methods 1</span>
+  			</div>
+	   </div>
+      <div class="polaroid">
+      		<img src="{% static 'images/MM2.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			<div class="container w3-hover-black">
+  			<span class="">Mathematical Methods 2</span>
+  			</div>
+	   </div>
+    </div>
+
+	<div class="w3-quarter">
+	   <div class="polaroid">
+      		<img src="{% static 'images/ASU.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			<div class="container w3-hover-black">
+  			<span>Atoms Stars and the Universe</span>
+  			</div>
+	   </div>
+      <div class="polaroid">
+      		<img src="{% static 'images/waves.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			<div class="container w3-hover-black">
+  			<span>Waves, Optics and Acoustics</span>
+  			</div>
+	   </div>
+    </div>
+
+	<div class="w3-quarter">
+	   <div class="polaroid">
+      		<img src="{% static 'images/P1.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			<div class="container w3-hover-black">
+  			<span class="">Practical Physics and Computing</span>
+  			</div>
+	   </div>
+      <div class="polaroid">
+      		<img src="{% static 'images/P2.jpg' %}" style="width:100%" onclick="onClick(this)" alt="Classical Mechanics">
+			       <div class="container w3-hover-black">
+  			          <span class="">Practical Skills 1</span>
+  		       </div>
+	    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="w3-center w3-padding-32">
+    <div class="w3-bar">
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
+      <a href="#" class="w3-bar-item w3-black w3-button">1</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a>
+    </div>
+  </div>
+
+  {% endif %}
+<!-- End page content -->
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+    <div class="row columns">
+        {{ block.super }}
+        <article>
+            <h1 class="">{{ request.user.first_name}} {{ request.user.last_name }}</h1>
+            <br>
+            <ul>
+                <li><h3>User Information:</h3></li>
+                    <ul>
+                        {% if request.user.is_staff%}
+                        <li>Staff Status: <strong>Staff</strong></li>
+                        {% else %}
+                        <li>Staff Status: <strong>Student</strong></li>
+                        {% endif %}
+                        <li>Username: <strong>{{ request.user.get_username }}</strong></li>
+                    </ul>
+                <br>
+                <li><h3>Completed Quizzes:</h3></li>
+                    <ul>
+                        {% for taken_quiz in taken_quizzes %}
+                            <li>{{ taken_quiz.quiz.title }}</li>
+                                <ul>
+                                    <li>Time Taken: <strong>{{ taken_quiz.time_stamp }}</strong></li>
+                                    <li>Score: <strong>{{ taken_quiz.correct_answers }} / {{ taken_quiz.quiz.total_questions }}</strong></li>
+                                </ul>
+                            <br>
+                        {% endfor %}
+                    </ul>
+        </article>
+    </div>
+{% endblock content %}
