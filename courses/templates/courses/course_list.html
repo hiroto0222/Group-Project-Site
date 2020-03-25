@@ -1,0 +1,33 @@
+{% extends "courses/layout.html" %}
+
+{% block title %}All{% endblock %}
+
+{% block content %}
+    <div class="row columns">
+        {{ block.super }}
+    </div>
+    <div class="row">
+        {%  for course in courses %}
+            <div class="small-6 columns">
+                <div class="callout">
+                    <h5><a href="{% url 'courses:course detail view' pk=course.pk %}"><strong>{{ course.title }}</strong></a></h5>
+                    <div class="card-copy">
+                        {{ course.description }}
+                        <br></br>
+                        {% if course.total_steps %}
+                            <p><strong>Steps:</strong> {{ course.total_steps }}</p>
+                        {% endif %}
+                        {% if course.course_length %}
+                            <p><strong>Duration:</strong> {{ course.course_length }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if forloop.counter|divisibleby:"2" %}
+                </div>
+                <div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

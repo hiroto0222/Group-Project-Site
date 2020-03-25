@@ -1,0 +1,44 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+
+{% block title %}{{ step.title }} | {{ step.course.title }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=step.course.pk %}">{{ step.course.title }}</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="sidenav">
+    <body>
+      <article>
+          <dl>
+              <dt><h2 align="center" style="color:white;"><strong>{{ step.course.title }}</strong></h2></dt>
+              {% for curr_step in steps %}
+                  {% if curr_step.pk == step.pk %}
+                  <dt>
+                      <a href="{{ step.get_absolute_url }}" style="color: white;"><strong>{{ curr_step.title }}</strong></a>
+                  </dt>
+                  {% else %}
+                  <dt>
+                      <a href="{{ curr_step.get_absolute_url }}">{{ curr_step.title }}</a>
+                  </dt>
+                  {% endif %}
+              {% endfor %}
+          </dl>
+      </article>
+    </body>
+  </div>
+  <div class="main">
+      <article>
+          {{ block.super }}
+          <h1>{{ step.title }}</h1>
+          <br><br>
+          <video width='1200' controls>
+              <source src='{{ MEDIA_URL }}{{ step.video_file }}' type='video/mp4'>
+              Your browser does not support the video tag.
+          </video>
+          <br><br>
+          {{ step.content|markdown_to_html }}
+      </article>
+  </div>
+{% endblock %}

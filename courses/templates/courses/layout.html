@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Courses | {{ block.super }}{% endblock %}
+
+{% block css %}
+<style>
+.sidenav {
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(35,31,32);
+  overflow-x: hidden;
+  padding-top: 100px;
+}
+
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  color: #818181;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 300px; /* Same as the width of the sidenav */
+  padding: 0px 20px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <ul class="breadcrumbs">
+        <!-- <li><a href="{% url 'home view' %}">Home</a></li> -->
+        <!-- {% block breadcrumbs %}{% endblock %} -->
+    </ul>
+{% endblock %}

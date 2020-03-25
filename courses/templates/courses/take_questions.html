@@ -1,0 +1,71 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+{% load mathjax %}
+
+{% block title %}{{ quiz.title }} | {{ quiz.course.title }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=quiz.course.pk %}">{{ quiz.course.title }}</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="sidenav">
+    <body>
+      <article>
+          <dl>
+              <dt><h2 align="center" style="color:white;"><strong>{{ quiz.course.title }}</strong></h2></dt>
+              {% for curr_step in steps %}
+                  {% if curr_step.pk == quiz.pk %}
+                  <dt>
+                      <a href="{{ step.get_absolute_url }}" style="color: white;"><strong>{{ curr_step.title }}</strong></a>
+                  </dt>
+                  {% else %}
+                  <dt>
+                      <a href="{{ curr_step.get_absolute_url }}">{{ curr_step.title }}</a>
+                  </dt>
+                  {% endif %}
+              {% endfor %}
+          </dl>
+      </article>
+    </body>
+  </div>
+  <div class="main">
+        <article>
+            {{ block.super }}
+            <h1>{{ quiz.title }}</h1>
+            <hr>
+            <br><br>
+
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+            {% mathjax_scripts %}
+            <form action="{% url 'courses:take_questions' quiz_pk=quiz.id %}" method="POST">
+                {% csrf_token %}
+                <ol type="1" class="no-bullet">
+                    {% for question in questions %}
+                    <li>
+                        <h2><strong>{{ forloop.counter }}: {{ question.prompt }}</strong></h2>
+                        {% if question.question_type == 'MCQ' %}
+                            {% for answer in question.answer_set.all %}
+                                <div class="callout">
+                                    <input type="radio" name="{{ question.id }}" id="answer{{ forloop.counter }}" value="{{ answer.id }}">
+                                    <label for="answer{{ forloop.counter }}" font size="6">{{ answer.text }}</label><br>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% for answer in question.answer_set.all %}
+                                <div class="callout">
+                                    <input type="text" name="{{ question.id }}" id="answer{{ forloop.counter }}">
+                                    <label for="answer{{ forloop.counter }}">Answer Here (accepts numeric values)</label><br>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <br><br>
+                    </li>
+                    {% endfor %}
+                </ol>
+                <input type="submit" value="Submit Answers">
+            </form>
+        </article>
+  </div>
+{% endblock %}

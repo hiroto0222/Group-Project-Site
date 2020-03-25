@@ -1,0 +1,12 @@
+<h1>{{ question.prompt }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'courses:take_question' quiz_pk=question.quiz.id question_pk=question.id %}" method="POST">
+{% csrf_token %}
+{% for answer in question.answer_set.all %}
+  <input type="radio" name="your_answer" id="answer{{ forloop.counter }}" value="{{ answer.id }}">
+  <label for="answer{{ forloop.counter }}">{{ answer.text }}</label><br>
+{% endfor %}
+<input type="submit" value="Vote">
+</form>

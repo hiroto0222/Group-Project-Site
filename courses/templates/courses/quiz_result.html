@@ -1,0 +1,68 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+{% load mathjax %}
+
+{% block title %}{{ quiz.title }} | {{ quiz.course.title }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=quiz.course.pk %}">{{ quiz.course.title }}</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="sidenav">
+  <body>
+    <article>
+        <dl>
+            <dt><h2 align="center" style="color:white;"><strong>{{ quiz.course.title }}</strong></h2></dt>
+            {% for curr_step in steps %}
+                {% if curr_step.pk == quiz.pk %}
+                <dt>
+                    <a href="{{ step.get_absolute_url }}" style="color: white;"><strong>{{ curr_step.title }}</strong></a>
+                </dt>
+                {% else %}
+                <dt>
+                    <a href="{{ curr_step.get_absolute_url }}">{{ curr_step.title }}</a>
+                </dt>
+                {% endif %}
+            {% endfor %}
+        </dl>
+    </article>
+  </body>
+</div>
+<div class="main">
+        {{ block.super }}
+        <article>
+            <h1 class="">Quiz Results for<br> {{ quiz.title }} </h1>
+
+            <div class="callout secondary">
+            <p><strong>{{ quiz_taker.user.username }}</strong> got {{ quiz_taker.correct_answers }} correct out of {{ quiz.total_questions }} </p>
+            </div>
+
+            <br><br>
+            <h2>YOUR ANSWERS</h2>
+            {% mathjax_scripts %}
+            {% for data in quiz_taker_data %}
+                <h3>{{ forloop.counter }}: {{ data.0.prompt }}</h3>
+                    {% if data.0.question_type == 'UIQ' %}
+                        <p>Your Answer: {{ data.1 }}</p>
+                              {% if not data.3 %}
+                                  <p style="color:red;">Incorrect!<br>
+                                  Answer should be: {{ data.2.text }}</p>
+                              {% else %}
+                                  <p style="color:green;">Correct!</p>
+                              {% endif %}
+                        <br><br>
+                    {% else %}
+                        <p>Your Answer: {{ data.1.text }}</p>
+                              {% if not data.1.correct %}
+                                  <p style="color:red;">Incorrect!<br>
+                                  Answer should be: {{ data.2.text }}</p>
+                              {% else %}
+                                  <p style="color:green;">Correct!</p>
+                              {% endif %}
+                        <br><br>
+                    {% endif %}
+            {% endfor %}
+        </article>
+</div>
+{% endblock content %}

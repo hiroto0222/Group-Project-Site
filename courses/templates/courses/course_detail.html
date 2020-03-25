@@ -1,0 +1,36 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+  <div class="sidenav">
+    <body>
+      <article>
+          <dl>
+              <dt><h2 align="center" style="color:white;"><strong>{{ course.title }}</strong></h2></dt>
+              {% for step in steps %}
+                  <dt>
+                      <a href="{{ step.get_absolute_url }}">{{ step.title }}</a>
+                  </dt>
+              {% endfor %}
+          </dl>
+      </article>
+    </body>
+  </div>
+  <div class="main">
+      <body>
+        {{ block.super }}
+        <article>
+            <h1 class="">{{ course.title }}</h1>
+            <p>
+            {{ course.description|markdown_to_html }}
+            </p>
+        </article>
+        {% if user.is_superuser or user.is_staff %}
+        <hr>
+        <a href="{% url 'courses:create_quiz' course_pk=course.id %}" class="button">New Quiz</a>
+        {% endif %}
+      </body>
+  </div>
+{% endblock %}

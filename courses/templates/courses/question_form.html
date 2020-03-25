@@ -1,0 +1,51 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+
+{% block title %}{{ form.instance.prompt|default:"New Question" }} | {{ quiz.course.title }} {{ block.super }}{% endblock title %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=quiz.course.pk %}">{{ quiz.course.title }}</a><li>
+    <li><a href="{% url 'courses:quiz detail view' course_pk=quiz.course.pk quiz_pk=quiz.pk %}">{{ quiz.title }}</a><li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <h1>{{ form.instance.prompt|default:"Make a New Question" }}</h1>
+    </div>
+    <div class="row columns">
+        {{ block.super }}
+        <form method="POST" action="">
+              {% csrf_token %}
+              {{ form.as_p }}
+
+              {{ formset.management_form }}
+
+              <table role="grid" class="stack hover" style="width: 100%">
+                  <thead>
+                      <tr>
+                          <th scope="col" class="text-center" style="width: 10%">Order</th>
+                          <th scope="col" class="text-center">Text</th>
+                          <th scope="col" class="text-center" style="width: 10%">Correct?</th>
+                          <th scope="col" class="text-center" style="width: 10%">Delete?</th>
+                      </tr>
+                  </thead>
+                  <tbody class="order">
+                      {% for form in formset %}
+                          <tr class="answer-form {% if form.instance.pk %}item{% else %}new{% endif %}">
+                                <td>{{ form.id }}{{ form.order }}</td>
+                                <td>{{ form.text }}</td>
+                                <td class="text-center">{{ form.correct }}</td>
+                                {% if form.instance.pk %}
+                                    <td class="text-center">{{ form.DELETE }}</td>
+                                {% else %}
+                                    <td class="text-center"></td>
+                                {% endif %}
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+
+              <input type="submit" class="button" value="Save">
+        </form>
+    </div>
+{% endblock content %}

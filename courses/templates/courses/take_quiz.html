@@ -1,0 +1,79 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+{% load mathjax %}
+
+{% block title %}{{ step.title }} | {{ step.course.title }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=step.course.pk %}">{{ step.course.title }}</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="sidenav">
+    <body>
+      <article>
+          <dl>
+              <dt><h2 align="center" style="color:white;"><strong>{{ step.course.title }}</strong></h2></dt>
+              {% for curr_step in steps %}
+                  {% if curr_step.pk == step.pk %}
+                  <dt>
+                      <a href="{{ step.get_absolute_url }}" style="color: white;"><strong>{{ curr_step.title }}</strong></a>
+                  </dt>
+                  {% else %}
+                  <dt>
+                      <a href="{{ curr_step.get_absolute_url }}">{{ curr_step.title }}</a>
+                  </dt>
+                  {% endif %}
+              {% endfor %}
+          </dl>
+      </article>
+    </body>
+  </div>
+  <div class="main">
+        <article>
+            {{ block.super }}
+            <h1>{{ step.title }}</h1>
+            <p>{{ step.description }}</p>
+
+        {% if user.is_superuser or user.is_staff %}
+        {% mathjax_scripts %}
+            <ul class="no-bullet">
+                {% for question in step.question_set.all %}
+                <li>
+                    <h2>{{ forloop.counter }}: {{ question.prompt }}</h2>
+                    {% for answer in question.answer_set.all %}
+                        <div class="callout">{{ answer.text }}</div>
+                    {% endfor %}
+                    {% if user.is_superuser or user.is_staff %}
+                        <a href="{% url 'courses:edit_question' question_pk=question.pk quiz_pk=step.pk %}" class="button">Edit</a>
+                    {% endif %}
+                </li>
+                <br><br>
+                {% endfor %}
+            </ul>
+        </article>
+        <hr>
+        <a href="{% url 'courses:edit_quiz' course_pk=step.course.pk quiz_pk=step.pk %}" class="button">Edit</a>
+        <a href="{% url 'courses:create_question' quiz_pk=step.pk question_type='mc' %}" class="button">New Multiple Choice Question</a>
+        <!-- <a href="{% url 'courses:create_question' quiz_pk=step.pk question_type='tf' %}" class="button">New True False Question</a> -->
+        <a href="{% url 'courses:create_question' quiz_pk=step.pk question_type='ui' %}" class="button">New User Input Question</a>
+        {% else %}
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+            {% if quiz_taker %}
+                <p>"{{ quiz_taker.user.username }}" has scored: {{ quiz_taker.correct_answers }} / {{ step.total_questions }}</p>
+            {% endif %}
+
+            <form action="{% url 'courses:quiz detail view' course_pk=step.course.id quiz_pk=step.id %}" method="POST">
+                {% csrf_token %}
+                {% if quiz_taker %}
+                <input type="hidden" name="quiz_take_or_retake" value="retake_quiz">
+                <input type="submit" value="Retake Quiz">
+                {% else %}
+                <input type="hidden" name="quiz_take_or_retake" value="take_quiz">
+                <input type="submit" value="Take Quiz">
+                {% endif %}
+
+        {% endif %}
+  </div>
+{% endblock %}

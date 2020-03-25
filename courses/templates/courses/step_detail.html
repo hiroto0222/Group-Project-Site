@@ -1,0 +1,34 @@
+{% extends "courses/layout.html" %}
+{% load course_extras %}
+
+{% block title %}{{ step.title }} | {{ step.course.title }} {{ block.super }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url 'courses:course detail view' pk=step.course.pk %}">{{ step.course.title }}</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="sidenav">
+    <body>
+      <article>
+          <dl>
+              <dt><h2 align="center" style="color:white;"><strong>{{ course.title }}</strong></h2></dt>
+              {% for step in steps %}
+                  <dt>
+                      <a href="{{ step.get_absolute_url }}">{{ step.title }}</a>
+                  </dt>
+              {% endfor %}
+          </dl>
+      </article>
+    </body>
+  </div>
+  <div class="main">
+      <div class="row columns">
+          <article>
+              {{ block.super }}
+              <h1>{{ step.title }}</h1>
+              {{ step.content|markdown_to_html }}
+          </article>
+      </div>
+  </div>
+{% endblock %}
